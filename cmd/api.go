@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Mildsauce9/1MRPS/internal/games"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -21,15 +22,14 @@ func (app *application) mount() http.Handler {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	//This is the route itself, it accepts a route and the http function that needs to be
-	// compiled when you call the route
-	// I think this can be written better, we could define the function in another package and
-	// import the functions just for this file, ideally I would want each API or atleast each
-	// module of the API to have the same file. So if we have a db, we need to split this by types.
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("all good!")) // This is the repsonse body that'll be returned to the request.
 	})
 
+	gameProcessor := games.NewProcessor()
+	gameHandler := games.NewHandler(gameProcessor)
+
+	r.Get("/game", gameHandler.SelectGames)
 	return r
 }
 
