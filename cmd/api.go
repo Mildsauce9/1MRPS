@@ -6,9 +6,11 @@ import (
 	"net/http"
 	"time"
 
+	repo "github.com/Mildsauce9/1MRPS/internal/adapters/postgresql/sqlc"
 	"github.com/Mildsauce9/1MRPS/internal/games"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/jackc/pgx/v5"
 )
 
 //mount
@@ -26,7 +28,7 @@ func (app *application) mount() http.Handler {
 		w.Write([]byte("all good!")) // This is the repsonse body that'll be returned to the request.
 	})
 
-	gameProcessor := games.NewProcessor()
+	gameProcessor := games.NewProcessor(repo.New(app.db))
 	gameHandler := games.NewHandler(gameProcessor)
 
 	r.Get("/game", gameHandler.SelectGames)
@@ -50,6 +52,7 @@ func (app *application) run(h http.Handler) error {
 
 type application struct {
 	config config
+	db     *pgx.Conn
 }
 
 type config struct {

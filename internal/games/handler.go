@@ -19,16 +19,12 @@ func NewHandler(processor GameProcessor) *handler {
 
 func (h *handler) SelectGames(w http.ResponseWriter, r *http.Request) {
 
-	err := h.processor.ListGames(r.Context())
+	games, err := h.processor.ListGames(r.Context())
 
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
-	}
-	games := []string{
-		"last of us",
-		"god of war",
 	}
 
 	json.Write(w, http.StatusOK, games)

@@ -1,4 +1,6 @@
 -- +goose Up
+
+-- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS games (
     csv_index INTEGER,
     id BIGINT PRIMARY KEY,
@@ -50,5 +52,10 @@ CREATE TABLE IF NOT EXISTS games (
     standalone_expansions JSONB,
     forks JSONB
 );
+
+-- +goose StatementEnd
+
 -- +goose Down
+
+-- + goose StatementStart
 DROP TABLE IF EXISTS games;

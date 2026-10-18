@@ -2,5 +2,5 @@
 SELECT * FROM games;
 
 
--- name: ListGames :one
+-- name: ListGamesById :one
 SELECT * FROM games WHERE id = $1;
